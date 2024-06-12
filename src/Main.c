@@ -4,8 +4,10 @@
 #include "stdlib.h"
 #include "string.h"
 
-// Main client
-// Main server
+// main client
+// main server
+// main purge
+
 
 int main(int argc, const char** argv) {
     if (argc != 2) {
