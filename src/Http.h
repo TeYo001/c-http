@@ -3,4 +3,9 @@
 #define SERVER_SUCCESS 0
 #define SERVER_FAILIURE 1
 
-int run_server();
+void run_server(int port);
+void run_client(const char* server_address_str, int port);
+void* handle_client(void* arg);
+void https_server_handshake(int client_fd);
+void https_client_handshake(int client_fd);
+void purge_port(int port);
