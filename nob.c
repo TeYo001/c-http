@@ -93,11 +93,11 @@ int main(int argc, char** argv)
         }
     }
 
-    const unsigned int INCLUDE_FILES_COUNT = 2;
-
+    const unsigned int INCLUDE_FILES_COUNT = 3;
     const char* include_file_locations[] = {
         "src/Main",
-        "src/Http"
+        "src/Http",
+        "src/Utils"
     };
     
     if (mainCmd == JUST_RUN || mainCmd == JUST_DEBUG) goto run_skip;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
 
         nob_cmd_append(&cmd, COMPILER_NAME, "-ggdb");
         nob_cmd_append(&cmd, "-I", SOURCE_DIRECTORY);
-        //nob_cmd_append(&cmd, "-I", LIBRARY_DIRECTORY);
+        nob_cmd_append(&cmd, "-I", LIBRARY_DIRECTORY);
         nob_cmd_append(&cmd, "-c", c_file_str);
         nob_cmd_append(&cmd, "-o", o_file_str);
         
@@ -154,6 +154,8 @@ int main(int argc, char** argv)
             strcat(o_file_str, ".o");
             nob_cmd_append(&cmd, o_file_str);
         }
+        nob_cmd_append(&cmd, "-Lopenssl", "-lssl", "-lcrypto"); // I hate the fact that this works
+
         if (!nob_cmd_run_sync(cmd)) return 1;
     }
 
