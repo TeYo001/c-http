@@ -1,3 +1,7 @@
+// OPTIONAL FLAGS
+#define EXTRA_SSL_ERROR_INFO
+#define EXTRACT_PRE_MASTER_SECRET
+
 #include "Utils.h"
 #include "Http.h"
 
