@@ -1,5 +1,7 @@
 #include "Http.h"
 #include "Utils.h"
+#include "Io.h"
+
 #include "stdlib.h"
 #include "stdbool.h"
 #include "stdio.h"
@@ -12,7 +14,7 @@
 #include "openssl/ssl.h"
 
 #define MAX_PENDING_SERVER_CONNECTIONS 10
-
+#define PRE_MASTER_SECRET_FILE_NAME "PreMasterSecret.md"
 
 void run_server(int port) {
     int server_fd;
@@ -126,6 +128,10 @@ void https_server_handshake(int client_fd) {
 
 void https_client_handshake(int client_fd) {
     SSL_CTX* ctx = SSL_CTX_new(TLS_method());
+    #ifdef EXTRACT_PRE_MASTER_SECRET
+    log("callback hooked");
+    SSL_CTX_set_keylog_callback(ctx, pre_master_secret_extractor);
+    #endif
     SSL* ssl = SSL_new(ctx);
     SSL_set_fd(ssl, client_fd);
     SSL_connect(ssl);
@@ -146,4 +152,8 @@ void purge_port(int port) {
         exit(EXIT_FAILURE);
     }
     close(sock_fd);
+}
+
+void pre_master_secret_extractor(const SSL* ssl, const char* pre_master_secret_str) {
+    write_to_file(PRE_MASTER_SECRET_FILE_NAME, pre_master_secret_str);
 }
